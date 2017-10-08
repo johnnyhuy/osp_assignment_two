@@ -9,16 +9,18 @@
  * @see http://www.derekmolloy.ie/ for a full description and follow-up descriptions.
 */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<errno.h>
-#include<fcntl.h>
-#include<string.h>
-#include<unistd.h>
+#include "S3604367UserApplication.h"
 
-#define BUFFER_LENGTH 256
+// Change new line to blank after stdin
+char *trim_string(char *string) { 
+   size_t length = strlen(string) - 1;
 
-static char receive[BUFFER_LENGTH];
+   if (string[length] == '\n') {
+      string[length] = '\0';
+   }
+
+   return string;
+}
 
 int main() {
    int ret, fd;
@@ -39,15 +41,9 @@ int main() {
    printf("Type in a short string to send to the kernel module:\n");
    fgets(stringToSend, sizeof(stringToSend), stdin);
 
-   // Change new line to blank after stdin
-   size_t length = strlen(stringToSend) - 1;
-   if (stringToSend[length] == '\n') {
-      stringToSend[length] = '\0';
-   }
-
    // Write message to LKM
    printf("Writing message to the device [%s].\n", stringToSend);
-   ret = write(fd, stringToSend, strlen(stringToSend));
+   ret = write(fd, trim_string(stringToSend), strlen(stringToSend));
 
    // Error check 
    if (ret < 0) {
