@@ -1,1 +1,0 @@
-cmd_/usr/src/johnnychar/johnnyhuychar.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /usr/src/johnnychar/johnnyhuychar.ko /usr/src/johnnychar/johnnyhuychar.o /usr/src/johnnychar/johnnyhuychar.mod.o ;  true
