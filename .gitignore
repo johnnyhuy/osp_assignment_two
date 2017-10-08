@@ -1,0 +1,12 @@
+.S3604367Device.ko.cmd
+.S3604367Device.mod.o.cmd
+.S3604367Device.o.cmd
+.tmp_versions/
+Module.symvers
+S3604367Device.h
+S3604367Device.ko
+S3604367Device.mod.c
+S3604367Device.mod.o
+S3604367Device.o
+modules.order
+

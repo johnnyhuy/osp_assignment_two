@@ -6,44 +6,7 @@
  * Source code from Derek Molloy at http://derekmolloy.ie/writing-a-linux-kernel-module-part-2-a-character-device/
  */
 
-#include <linux/init.h>           // Macros used to mark up functions e.g. __init __exit
-#include <linux/module.h>         // Core header for loading LKMs into the kernel
-#include <linux/device.h>         // Header to support the kernel Driver Model
-#include <linux/kernel.h>         // Contains types, macros, functions for the kernel
-#include <linux/fs.h>             // Header for the Linux file system support
-#include <asm/uaccess.h>          // Required for the copy to user function
-
-#define  DEVICE_NAME "S3604367Device"    ///< The device will appear at /dev/driver_device using this value
-#define  CLASS_NAME  "johnnyhuy"        ///< The device class -- this is a character device driver
-
-MODULE_LICENSE("GPL");            ///< The license type -- this affects available functionality
-MODULE_AUTHOR("Johnny Huynh");    ///< The author -- visible when you use modinfo
-MODULE_DESCRIPTION("This is a Linux character driver for an assignment from OSP semester two 2017.");
-MODULE_VERSION("0.1");            ///< A version number to inform users
-
-static int    majorNumber;                  ///< Stores the device number -- determined automatically
-static short  size_of_message;              ///< Used to remember the size of the string stored
-static int    numberOpens = 0;              ///< Counts the number of times the device is opened
-static struct class*  driver_class  = NULL; ///< The device-driver class struct pointer
-static struct device* driver_device = NULL; ///< The device-driver device struct pointer
-
-struct virtual_device {
-   char data[100];
-   struct semaphore sem;
-} myDevice;
-
-// The prototype functions for the character driver -- must come before the struct definition
-static int     dev_open(struct inode *, struct file *);
-static int     dev_release(struct inode *, struct file *);
-static ssize_t dev_read(struct file *, char *, size_t, loff_t *);
-static ssize_t dev_write(struct file *, const char *, size_t, loff_t *);
-
-static struct file_operations fops = {
-    .open = dev_open,
-    .read = dev_read,
-    .write = dev_write,
-    .release = dev_release,
-};
+#include "S3604367Device.h"
 
 /** @brief The LKM initialization function
  *  The static keyword restricts the visibility of the function to within this C file. The __init
@@ -143,8 +106,9 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
  *  @param offset The offset if required
  */
 static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, loff_t *offset){
-   sprintf(myDevice.data, "%s(%zu letters)", buffer, len);   // appending received string with its length
-   size_of_message = strlen(myDevice.data);                 // store the length of the stored message
+   strcat(myDevice.data, buffer);
+   sprintf(myDevice.data, "%s", myDevice.data);   // appending received string with its length
+   size_of_message = strlen(myDevice.data); 
    printk(KERN_INFO "S3604367 Char Device: Received %zu characters from the user\n", len);
    return len;
 }
