@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: osp-assignment-two
+  title: OSP Assignment Two
+  description: RMIT course project implementing C
+  tags:
+    - c
+spec:
+  type: library
+  lifecycle: experimental
+  owner: johnnyhuy
